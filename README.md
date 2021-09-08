@@ -1,0 +1,2 @@
+Mysql
+* CREATE DATABASE springsecurity
