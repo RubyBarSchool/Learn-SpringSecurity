@@ -1,2 +1,0 @@
-Mysql
-* CREATE DATABASE springsecurity
