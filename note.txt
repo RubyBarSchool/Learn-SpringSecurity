@@ -1,0 +1,3 @@
+- Để kích hoạt tính năng của spring security
+@EnableWebSecurity
+WebSecurityConfigurerAdapter là một interface của springsecurity giúp ta cài đặt thông tin dễ dàng hơn
