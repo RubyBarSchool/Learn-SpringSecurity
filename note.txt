@@ -1,3 +1,16 @@
+- Tầng controller(API) package(api)
+- Tầng service package service
+- Tầng repository package repo
+- Cấu hình database package domain 
+- Cấu hình filter package filter
+- package security chứa class SecurityConfig ( cấu hình lại spring security )
+
 - Để kích hoạt tính năng của spring security
 @EnableWebSecurity
 WebSecurityConfigurerAdapter là một interface của springsecurity giúp ta cài đặt thông tin dễ dàng hơn
+
+Cung cấp class  BCryptPasswordEncoder để spring security sử dụng để mã hóa mật khẩu người dùng
+
+Cấu hình lại interface UserDetailsService sử dụng method trong UserServiceImpl (loadUserByUsername - Cung cấp cho spring security một User( username,password, collection<role> )
+
+
