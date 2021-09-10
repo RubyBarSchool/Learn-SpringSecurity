@@ -38,6 +38,7 @@ public class SercurityApplication {
 			userService.addRoleToUser("truongtv1399it","ROLE_SUPER_ADMIN");
 			userService.addRoleToUser("truongtv1399it","ROLE_ADMIN");
 			userService.addRoleToUser("truongtv1399it","ROLE_MANAGER");
+			userService.addRoleToUser("truongtv1399it","ROLE_USER");
 			userService.addRoleToUser("truongtv1399","ROLE_USER");
 			userService.addRoleToUser("truongtv13","ROLE_MANAGER");
 			userService.addRoleToUser("truongtv","ROLE_USER");

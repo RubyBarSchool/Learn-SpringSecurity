@@ -31,6 +31,7 @@ import static java.util.Arrays.stream;
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.info("doFilterInternal in CustomAuthorizationFilter");
         if(request.getServletPath().equals("/api/login") || request.getServletPath().equals("/token/refresh")){
             filterChain.doFilter(request,response);
         }else{
@@ -47,7 +48,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     stream(roles).forEach(role -> {
                         authorities.add(new SimpleGrantedAuthority(role));
                     });
-                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,null,authorities);
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,
+                            null,authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request,response);
                 }catch (Exception exception){

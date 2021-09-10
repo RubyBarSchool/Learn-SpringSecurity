@@ -1,6 +1,8 @@
 package com.example.sercurity.security;
 
 import com.example.sercurity.filter.CustomAuthenticationFilter;
+import com.example.sercurity.filter.CustomAuthorizationFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +21,7 @@ import static org.springframework.http.HttpMethod.POST;
 
 @Configuration
 @EnableWebSecurity
+@Slf4j
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
@@ -28,13 +31,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        log.info("configure(AuthenticationManagerBuilder auth) in SecurityConfig");
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter();
-        customAuthenticationFilter.setFilterProcessesUrl("/api/login");
+        log.info("configure(HttpSecurity http) in SecurityConfig");
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
+//        customAuthenticationFilter.setFilterProcessesUrl("/api/login");
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/login/**","/token/refresh/**").permitAll();
@@ -42,12 +47,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(POST,"/api/user/save/**").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
-        http.addFilterBefore(new CustomAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception{
+        log.info("authenticationManagerBean in SecurityConfig");
         return super.authenticationManagerBean();
     }
 }

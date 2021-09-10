@@ -26,20 +26,26 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    @Autowired
+
     private AuthenticationManager authenticationManager;
+
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        log.info("attemptAuthentication in CustomAuthenticationFilter");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         log.info("Username is: {}",username); log.info("Password is: {}",password);
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username,password);
-        return super.attemptAuthentication(request, response);
+        return authenticationManager.authenticate(usernamePasswordAuthenticationToken);
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+        log.info("successfulAuthentication in CustomAuthenticationFilter");
         User user = (User) authResult.getPrincipal();
         Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
         String access_token = JWT.create()
